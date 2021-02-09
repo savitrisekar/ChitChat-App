@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_16"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/civ_image"
+            android:layout_width="@dimen/dimen_48"
+            android:layout_height="@dimen/dimen_48"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/civ_image"
+            android:text="@string/display_name"
+            android:textSize="@dimen/dimen_16"
+            android:textColor="@color/black_semi"
+            android:layout_marginStart="@dimen/dimen_8"
+            app:layout_constraintTop_toTopOf="@id/civ_image"
+            app:layout_constraintStart_toEndOf="@id/civ_image"/>
+
+        <TextView
+            android:id="@+id/tv_last_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_username"
+            android:layout_toRightOf="@+id/civ_image"
+            android:maxLines="3"
+            android:text="@string/display_message"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/font_12"
+            android:layout_marginStart="@dimen/dimen_8"
+            app:layout_constraintStart_toEndOf="@id/civ_image"
+            app:layout_constraintTop_toBottomOf="@id/tv_username"
+            app:layout_constraintBottom_toBottomOf="@id/civ_image"/>
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textSize="@dimen/font_12"
+            android:textColor="@color/grey"
+            android:text="@string/display_time"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <FrameLayout
+            android:id="@+id/fl_unread_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_time"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/civ_image">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/bg_circle_green" />
+
+            <TextView
+                android:id="@+id/tv_unread"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/chatTime"
+                android:text="@string/display_message_number"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_12"
+                android:layout_gravity="center"/>
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/grey_light"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">ChitChat App</string>
+    <string name="display_user_id">User ID</string>
+    <string name="pasword_hint">Password</string>
+    <string name="display_name">Name</string>
+    <string name="btn_login">Login</string>
+    <string name="display_title">ChitChat</string>
+    <string name="display_message">Last message</string>
+    <string name="display_time">09:10</string>
+    <string name="display_message_number">100</string>
+    <string name="display_new_chat">New Chat</string>
+    <string name="display_contact">Contacts</string>
+    <string name="display_new_group">New Group</string>
+    <string name="display_choose_contact">Choose Contacts</string>
+    <string name="display_type_message">Type your message</string>
+    <string name="display_pop_cancel">Cancel</string>
+    <string name="display_pop_gallery">Image From Gallery</string>
+    <string name="display_pop_camera">Take Photo</string>
+    <string name="display_chat_date">Date</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
