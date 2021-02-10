@@ -1,4 +1,4 @@
-package com.example.chitchat.adapter;
+package com.example.chitchat.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

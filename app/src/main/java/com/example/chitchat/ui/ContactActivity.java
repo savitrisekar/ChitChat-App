@@ -8,12 +8,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.chitchat.ChitChatApp;
 import com.example.chitchat.R;
-import com.example.chitchat.adapter.ContactAdapter;
-import com.example.chitchat.adapter.OnItemClickListener;
+import com.example.chitchat.ui.adapter.ContactAdapter;
+import com.example.chitchat.ui.adapter.OnItemClickListener;
 import com.example.chitchat.model.User;
 import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
 
@@ -24,6 +25,7 @@ public class ContactActivity extends AppCompatActivity implements OnItemClickLis
     private RecyclerView recyclerView;
     private ContactAdapter contactAdapter;
     private ContactContract.Presenter presenter;
+    private LinearLayout llCreateGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +33,13 @@ public class ContactActivity extends AppCompatActivity implements OnItemClickLis
         setContentView(R.layout.activity_contact);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        findViewById(R.id.back).setOnClickListener(v -> onBackPressed());
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
+
 
         recyclerView = findViewById(R.id.rv_contact);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -49,11 +50,25 @@ public class ContactActivity extends AppCompatActivity implements OnItemClickLis
 
         recyclerView.setAdapter(contactAdapter);
 
+        initView();
+
         presenter = new ContactPresenter(this,
                 ChitChatApp.getInstance().getCompat().getUserRepository(),
                 ChitChatApp.getInstance().getCompat().getChatRoomRepository());
 
         presenter.loadContacts();
+    }
+
+    private void initView() {
+        llCreateGroup = findViewById(R.id.ll_create_group_chat);
+
+        llCreateGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ContactActivity.this, GroupChatActivity.class));
+                Toast.makeText(ContactActivity.this, "halo", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

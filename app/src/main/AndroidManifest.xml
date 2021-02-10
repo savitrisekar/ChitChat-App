@@ -14,18 +14,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChitChatApp">
+        <activity android:name=".ui.CreateGroupActivity"></activity>
+        <activity android:name=".ui.GroupChatActivity" />
         <activity
-            android:name="com.example.chitchat.ui.ContactActivity"
+            android:name=".ui.ContactActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.SecondApp"/>
+            android:theme="@style/Theme.SecondApp" />
         <activity
-            android:name="com.example.chitchat.ui.LoginActivity"
+            android:name=".ui.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.SecondApp"/>
+            android:theme="@style/Theme.SecondApp" />
         <activity
-            android:name="com.example.chitchat.ui.MainActivity"
+            android:name=".ui.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.SecondApp"/>
+            android:theme="@style/Theme.SecondApp" />
         <activity
             android:name=".ui.SplashScreenActivity"
             android:screenOrientation="portrait"

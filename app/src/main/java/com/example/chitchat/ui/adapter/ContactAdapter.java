@@ -1,4 +1,4 @@
-package com.example.chitchat.adapter;
+package com.example.chitchat.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

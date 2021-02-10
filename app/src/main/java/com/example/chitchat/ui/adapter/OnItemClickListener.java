@@ -1,4 +1,4 @@
-package com.example.chitchat.adapter;
+package com.example.chitchat.ui.adapter;
 
 public interface OnItemClickListener {
     void onItemClick(int position);

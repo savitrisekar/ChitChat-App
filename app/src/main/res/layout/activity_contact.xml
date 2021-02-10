@@ -34,10 +34,44 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <LinearLayout
+        android:id="@+id/ll_create_group_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/qiscus_white"
+        android:orientation="horizontal"
+        android:padding="@dimen/dimen_8"
+        app:layout_constraintTop_toBottomOf="@id/appBar">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/qiscus_white"
+            android:padding="@dimen/dimen_6"
+            android:src="@drawable/ic_create_group" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/display_new_group"
+            android:textSize="@dimen/font_16"
+            android:textColor="@color/grey_dark"
+            android:layout_marginStart="@dimen/dimen_8"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_light"
+        app:layout_constraintTop_toBottomOf="@id/ll_create_group_chat"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/appBar" />
+        app:layout_constraintTop_toBottomOf="@id/view_line" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

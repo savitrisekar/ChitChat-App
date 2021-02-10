@@ -11,12 +11,15 @@
     <string name="display_new_chat">New Chat</string>
     <string name="display_contact">Contacts</string>
     <string name="display_new_group">New Group</string>
+    <string name="display_chat_group">Chat Group</string>
     <string name="display_choose_contact">Choose Contacts</string>
     <string name="display_type_message">Type your message</string>
     <string name="display_pop_cancel">Cancel</string>
     <string name="display_pop_gallery">Image From Gallery</string>
     <string name="display_pop_camera">Take Photo</string>
     <string name="display_chat_date">Date</string>
+    <string name="display_subject_group">Group Subject</string>
+    <string name="display_describe_group">Give your group a name</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

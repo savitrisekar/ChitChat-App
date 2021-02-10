@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chitchat.ChitChatApp;
 import com.example.chitchat.R;
-import com.example.chitchat.adapter.MainAdapter;
-import com.example.chitchat.adapter.OnItemClickListener;
+import com.example.chitchat.ui.adapter.MainAdapter;
+import com.example.chitchat.ui.adapter.OnItemClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
 import com.qiscus.sdk.chat.core.event.QiscusCommentReceivedEvent;
