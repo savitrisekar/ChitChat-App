@@ -4,11 +4,14 @@ import com.example.chitchat.model.User;
 import com.example.chitchat.repository.ChatRoomRepository;
 import com.example.chitchat.repository.UserRepository;
 
+import java.util.List;
+
 public class ContactPresenter implements ContactContract.Presenter {
 
     private ContactContract.View view;
     private UserRepository userRepository;
     private ChatRoomRepository chatRoomRepository;
+    private List<User> users;
 
     public ContactPresenter(ContactContract.View view, UserRepository userRepository, ChatRoomRepository chatRoomRepository) {
         this.view = view;
@@ -16,19 +19,18 @@ public class ContactPresenter implements ContactContract.Presenter {
         this.chatRoomRepository = chatRoomRepository;
     }
 
-    @Override
-    public void loadContacts() {
-        userRepository.getUser(users -> view.showContacts(users),
-                throwable -> view.showErrorMessage(throwable.getMessage()));
+    public void loadContacts(long page, int limit, String query) {
+        userRepository.getUsers(page, limit, query, users -> {
+            view.showContacts(users);
+            this.users = users;
+        }, throwable -> {
+            view.showErrorMessage(throwable.getMessage());
+        });
     }
 
-    @Override
     public void createRoom(User contact) {
         chatRoomRepository.createChatRoom(contact,
                 chatRoom -> view.showChatRoomPage(chatRoom),
-                throwable -> view.showErrorMessage(throwable.getMessage()));
-
-        userRepository.openChat(contact, intent -> view.showRoomPage(intent),
                 throwable -> view.showErrorMessage(throwable.getMessage()));
     }
 }

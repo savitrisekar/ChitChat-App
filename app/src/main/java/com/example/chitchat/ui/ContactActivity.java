@@ -16,11 +16,12 @@ import com.example.chitchat.R;
 import com.example.chitchat.ui.adapter.ContactAdapter;
 import com.example.chitchat.ui.adapter.OnItemClickListener;
 import com.example.chitchat.model.User;
+import com.example.chitchat.ui.groupcreate.GroupChatActivity;
 import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
 
 import java.util.List;
 
-public class ContactActivity extends AppCompatActivity implements OnItemClickListener, ContactContract.View {
+public class ContactActivity extends AppCompatActivity implements ContactContract.View, OnItemClickListener {
 
     private RecyclerView recyclerView;
     private ContactAdapter contactAdapter;
@@ -40,6 +41,7 @@ public class ContactActivity extends AppCompatActivity implements OnItemClickLis
             }
         });
 
+        llCreateGroup = findViewById(R.id.ll_create_group_chat);
 
         recyclerView = findViewById(R.id.rv_contact);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -50,25 +52,22 @@ public class ContactActivity extends AppCompatActivity implements OnItemClickLis
 
         recyclerView.setAdapter(contactAdapter);
 
-        initView();
-
         presenter = new ContactPresenter(this,
-                ChitChatApp.getInstance().getCompat().getUserRepository(),
-                ChitChatApp.getInstance().getCompat().getChatRoomRepository());
-
-        presenter.loadContacts();
-    }
-
-    private void initView() {
-        llCreateGroup = findViewById(R.id.ll_create_group_chat);
+                ChitChatApp.getInstance().getComponent().getUserRepository(),
+                ChitChatApp.getInstance().getComponent().getChatRoomRepository());
+        presenter.loadContacts(1,100, "");
 
         llCreateGroup.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ContactActivity.this, GroupChatActivity.class));
-                Toast.makeText(ContactActivity.this, "halo", Toast.LENGTH_SHORT).show();
+            public void onClick(View view) {
+                createGroupChat();
             }
         });
+    }
+
+    private void createGroupChat() {
+        Intent intent = new Intent(this, GroupChatActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -84,13 +83,7 @@ public class ContactActivity extends AppCompatActivity implements OnItemClickLis
 
     @Override
     public void showChatRoomPage(QiscusChatRoom chatRoom) {
-
-    }
-
-    @Override
-    public void showRoomPage(Intent intent) {
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        startActivity(ChatRoomActivity.generateIntent(this, chatRoom));
     }
 
     @Override

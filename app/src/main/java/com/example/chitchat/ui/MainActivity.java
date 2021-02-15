@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -17,13 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chitchat.ChitChatApp;
 import com.example.chitchat.R;
-import com.example.chitchat.ui.adapter.MainAdapter;
+import com.example.chitchat.ui.adapter.ChatRoomAdapter;
 import com.example.chitchat.ui.adapter.OnItemClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
 import com.qiscus.sdk.chat.core.event.QiscusCommentReceivedEvent;
-import com.qiscus.sdk.ui.QiscusChannelActivity;
-import com.qiscus.sdk.ui.QiscusChatActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,9 +34,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private RecyclerView recyclerView;
     private MainContract.Presenter presenter;
-    private MainAdapter mainAdapter;
+    private ChatRoomAdapter chatRoomAdapter;
     private FloatingActionButton fabContact;
     private Toolbar toolbar;
+    private LinearLayout llEmpty;
+    private Button btnStart;
 
     @SuppressLint("NewApi")
     @Override
@@ -50,43 +52,37 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         recyclerView = findViewById(R.id.rvChat);
 
-        presenter = new MainPresenter(this, ChitChatApp.getInstance().getCompat().getUserRepository(),
-                ChitChatApp.getInstance().getCompat().getChatRoomRepository());
-        mainAdapter = new MainAdapter(this);
-        mainAdapter.setOnItemClickListener(this);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mainAdapter);
-
         initView();
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+
+        chatRoomAdapter = new ChatRoomAdapter(this);
+        chatRoomAdapter.setOnItemClickListener(this);
+
+        recyclerView.setAdapter(chatRoomAdapter);
+        presenter = new MainPresenter(this, ChitChatApp.getInstance().getComponent().getUserRepository(),
+                ChitChatApp.getInstance().getComponent().getChatRoomRepository());
     }
 
     private void initView() {
         fabContact = findViewById(R.id.fab_contact);
+        llEmpty = findViewById(R.id.ll_empty_room);
+        btnStart = findViewById(R.id.btn_start_chat);
+
+        btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ContactActivity.class));
+            }
+        });
+
         fabContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, ContactActivity.class));
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        presenter.loadChatRooms();
-        EventBus.getDefault().register(this);
-    }
-
-    @Subscribe
-    public void onCommentReceivedEvent(QiscusCommentReceivedEvent event) {
-        presenter.loadChatRooms();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -121,27 +117,53 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override
-    public void onItemClick(int position) {
-        presenter.openChat(mainAdapter.getData().get(position));
+    protected void onResume() {
+        super.onResume();
+        presenter.loadChatRooms();
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe
+    public void onCommentReceivedEvent(QiscusCommentReceivedEvent event) {
+        presenter.loadChatRooms();
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+
+    @Override
     public void showChatRooms(List<QiscusChatRoom> chatRooms) {
-        mainAdapter.addOrUpdate(chatRooms);
+        if (chatRooms.size() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            llEmpty.setVisibility(View.VISIBLE);
+        } else {
+            llEmpty.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+        chatRoomAdapter.addOrUpdate(chatRooms);
     }
 
     @Override
     public void showChatRoomPage(QiscusChatRoom chatRoom) {
-        startActivity(QiscusChatActivity.generateIntent(this, chatRoom));
+        startActivity(ChatRoomActivity.generateIntent(this, chatRoom));
     }
 
     @Override
     public void showChatRoomPageGroup(QiscusChatRoom qiscusChatRoom) {
-        startActivity(QiscusChannelActivity.generateIntent(this, qiscusChatRoom));
+        startActivity(GroupChatRoomActivity.generateIntent(this, qiscusChatRoom));
     }
 
     @Override
     public void showErrorMessage(String errorMessage) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        presenter.openChat(chatRoomAdapter.getData().get(position));
     }
 }

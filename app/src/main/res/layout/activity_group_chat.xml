@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:layout_constraintTop_toTopOf="parent">
+    android:background="@color/white">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
-            app:navigationIcon="@drawable/ic_arrow_back">
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_back" />
 
             <TextView
                 android:id="@+id/tv_title"
@@ -30,21 +28,47 @@
                 android:textColor="@color/black_semi"
                 android:textSize="@dimen/font_16" />
 
-            <TextView
-                android:id="@+id/tv_next"
+            <ImageView
+                android:id="@+id/iv_forward"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Next"
-                android:textColor="@color/grey_dark"
-                android:textSize="@dimen/font_16"
+                android:layout_marginEnd="16dp"
                 android:layout_gravity="end"
-                android:layout_marginEnd="@dimen/dimen_16"/>
+                android:src="@drawable/ic_arrow_forward"
+                android:visibility="visible" />
 
         </androidx.appcompat.widget.Toolbar>
-    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal"
+        android:scrollbars="horizontal"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rv_select"
+        android:background="@color/grey_light"
+        android:padding="@dimen/dimen_8"
+        android:text="Contacts"
+        android:textAllCaps="true" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_group"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:layout_below="@id/tv_contact"/>
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
         android:layout_height="match_parent" />
-</LinearLayout>
+</RelativeLayout>

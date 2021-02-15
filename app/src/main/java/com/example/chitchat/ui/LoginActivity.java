@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
 
-        loginPresenter = new LoginPresenter(this, ChitChatApp.getInstance().getCompat().getUserRepository());
+        loginPresenter = new LoginPresenter(this, ChitChatApp.getInstance().getComponent().getUserRepository());
 
         initView();
     }

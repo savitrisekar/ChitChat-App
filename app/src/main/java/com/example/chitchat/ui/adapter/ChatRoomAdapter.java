@@ -1,6 +1,5 @@
 package com.example.chitchat.ui.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.request.RequestOptions;
@@ -21,12 +19,12 @@ import com.qiscus.sdk.chat.core.data.model.QiscusComment;
 
 import java.util.List;
 
-public class MainAdapter extends SortedRecyclerViewAdapter<QiscusChatRoom, MainAdapter.ViewHolder> {
+public class ChatRoomAdapter extends SortedRecyclerViewAdapter<QiscusChatRoom, ChatRoomAdapter.Holder>  {
 
     private Context context;
     private OnItemClickListener onItemClickListener;
 
-    public MainAdapter(Context context) {
+    public ChatRoomAdapter(Context context) {
         this.context = context;
     }
 
@@ -40,15 +38,14 @@ public class MainAdapter extends SortedRecyclerViewAdapter<QiscusChatRoom, MainA
         return item2.getLastComment().getTime().compareTo(item1.getLastComment().getTime());
     }
 
-    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_chat_message, parent, false);
-        return new ViewHolder(view, onItemClickListener);
+        return new Holder(view, onItemClickListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(Holder holder, int position) {
         holder.bind(getData().get(position));
     }
 
@@ -68,33 +65,32 @@ public class MainAdapter extends SortedRecyclerViewAdapter<QiscusChatRoom, MainA
         this.onItemClickListener = onItemClickListener;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
+    public static class Holder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView ivAvatar;
-        private TextView tvName, tvLastMessage, tvUnread, tvTime;
+        private TextView tvName, tvTime, tvUnread;
+        private com.vanniktech.emoji.EmojiTextView eLastMessage;
+        private FrameLayout layout_unread_count;
         private OnItemClickListener onItemClickListener;
-        private FrameLayout flUnread;
 
-        ViewHolder(View view, OnItemClickListener onItemClickListener) {
-            super(view);
-            ivAvatar = view.findViewById(R.id.civ_image);
-            tvName = view.findViewById(R.id.tv_username);
-            tvLastMessage = view.findViewById(R.id.tv_last_msg);
-            tvUnread = view.findViewById(R.id.tv_unread);
-            tvTime = view.findViewById(R.id.tv_time);
-            flUnread = view.findViewById(R.id.fl_unread_count);
+        Holder(View itemView, OnItemClickListener onItemClickListener) {
+            super(itemView);
+            ivAvatar = itemView.findViewById(R.id.civ_image);
+            tvName = itemView.findViewById(R.id.tv_username);
+            eLastMessage = itemView.findViewById(R.id.tv_last_msg);
+            tvUnread = itemView.findViewById(R.id.tv_unread);
+            tvTime = itemView.findViewById(R.id.tv_time);
+            layout_unread_count = itemView.findViewById(R.id.fl_unread_count);
 
             this.onItemClickListener = onItemClickListener;
-            view.setOnClickListener(this);
+
+            itemView.setOnClickListener(this);
         }
 
-        @SuppressLint("ResourceAsColor")
         void bind(QiscusChatRoom chatRoom) {
-
             Nirmana.getInstance().get()
                     .setDefaultRequestOptions(new RequestOptions()
-                            .placeholder(R.drawable.ic_qiscus_avatar)
-                            .error(R.drawable.ic_qiscus_avatar)
+                            .placeholder(R.drawable.ic_person)
+                            .error(R.drawable.ic_person)
                             .dontAnimate())
                     .load(chatRoom.getAvatarUrl())
                     .into(ivAvatar);
@@ -105,25 +101,25 @@ public class MainAdapter extends SortedRecyclerViewAdapter<QiscusChatRoom, MainA
                     String lastMessageText = lastComment.isMyComment() ? "You: " : lastComment.getSender().split(" ")[0] + ": ";
                     lastMessageText += chatRoom.getLastComment().getType() == QiscusComment.Type.IMAGE
                             ? "\uD83D\uDCF7 send an image" : lastComment.getMessage();
-                    tvLastMessage.setText(lastMessageText);
-                } else {
+                    eLastMessage.setText(lastMessageText);
+                }else{
                     String lastMessageText = "";
                     lastMessageText += chatRoom.getLastComment().getType() == QiscusComment.Type.IMAGE
                             ? "\uD83D\uDCF7 send an image" : lastComment.getMessage();
-                    tvLastMessage.setText(lastMessageText);
+                    eLastMessage.setText(lastMessageText);
                 }
 
-                tvTime.setText(DateUtil.toTimeDate(chatRoom.getLastComment().getTime()));
+                tvTime.setText(DateUtil.getLastMessageTimestamp(lastComment.getTime()));
             } else {
-                tvLastMessage.setText("");
+                eLastMessage.setText("");
                 tvTime.setText("");
             }
 
             tvUnread.setText(String.format("%d", chatRoom.getUnreadCount()));
             if (chatRoom.getUnreadCount() == 0) {
-                flUnread.setVisibility(View.GONE);
+                layout_unread_count.setVisibility(View.GONE);
             } else {
-                flUnread.setVisibility(View.VISIBLE);
+                layout_unread_count.setVisibility(View.VISIBLE);
             }
         }
 

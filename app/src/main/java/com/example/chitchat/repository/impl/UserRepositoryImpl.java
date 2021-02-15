@@ -14,8 +14,9 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.qiscus.sdk.Qiscus;
+import com.qiscus.sdk.chat.core.QiscusCore;
 import com.qiscus.sdk.chat.core.data.model.QiscusAccount;
+import com.qiscus.sdk.chat.core.data.remote.QiscusApi;
 
 import org.json.JSONException;
 
@@ -31,8 +32,8 @@ import rx.schedulers.Schedulers;
 public class UserRepositoryImpl implements UserRepository {
 
     private Context context;
-    private Gson gson;
     private SharedPreferences sharedPreferences;
+    private Gson gson;
 
     public UserRepositoryImpl(Context context) {
         this.context = context;
@@ -41,10 +42,10 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void login(String userId, String password, String displayName, Action<User> onSuccess, Action<Throwable> onError) {
-        Qiscus.setUser(userId, password)
-                .withUsername(displayName)
-                .withAvatarUrl(AvatarUtil.generateAvatar(displayName))
+    public void login(String email, String password, String name, Action<User> onSuccess, Action<Throwable> onError) {
+        QiscusCore.setUser(email, password)
+                .withUsername(name)
+                .withAvatarUrl(AvatarUtil.generateAvatar(name))
                 .save()
                 .map(this::mapFromQiscusAccount)
                 .doOnNext(this::setCurrentUser)
@@ -54,10 +55,20 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void getUser(Action<List<User>> onSuccess, Action<Throwable> onError) {
-        getUsersObservable()
+    public void getCurrentUser(Action<User> onSuccess, Action<Throwable> onError) {
+        getCurrentUserObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onSuccess::call, onError::call);
+    }
+
+    @Override
+    public void getUsers(long page, int limit, String searchUsername, Action<List<User>> onSuccess, Action<Throwable> onError) {
+        QiscusApi.getInstance().getUsers(searchUsername, page, limit)
                 .flatMap(Observable::from)
                 .filter(user -> !user.equals(getCurrentUser()))
+                .filter(user -> !user.getUsername().equals(""))
+                .map(this::mapFromQiscusAccount)
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -65,41 +76,52 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void openChat(User user, Action<Intent> onSuccess, Action<Throwable> onError) {
-        Qiscus.buildChatWith(user.getId())
-                .withTitle(user.getName())
-                .build(context, new Qiscus.ChatActivityBuilderListener() {
-                    @Override
-                    public void onSuccess(Intent intent) {
-                        onSuccess.call(intent);
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        onError.call(throwable);
-                    }
-                });
-    }
-
-    @Override
-    public void updateContacts(List<User> contacts) {
-        sharedPreferences.edit()
-                .putString("contacts", gson.toJson(contacts))
-                .apply();
+    public void updateProfile(String name, Action<User> onSuccess, Action<Throwable> onError) {
+        QiscusCore.updateUserAsObservable(name, getCurrentUser().getAvatarUrl())
+                .map(this::mapFromQiscusAccount)
+                .doOnNext(this::setCurrentUser)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onSuccess::call, onError::call);
     }
 
     @Override
     public void logout() {
-        Qiscus.clearUser();
+        QiscusCore.removeDeviceToken(getCurrentDeviceToken());
+        QiscusCore.clearUser();
         sharedPreferences.edit().clear().apply();
     }
 
-    private User mapFromQiscusAccount(QiscusAccount qiscusAccount) {
-        User user = new User();
-        user.setId(qiscusAccount.getEmail());
-        user.setName(qiscusAccount.getUsername());
-        user.setAvatarUrl(qiscusAccount.getAvatar());
-        return user;
+    private Observable<User> getCurrentUserObservable() {
+        return Observable.create(subscriber -> {
+            try {
+                subscriber.onNext(getCurrentUser());
+            } catch (Exception e) {
+                subscriber.onError(e);
+            } finally {
+                subscriber.onCompleted();
+            }
+        }, Emitter.BackpressureMode.BUFFER);
+    }
+
+    private User getCurrentUser() {
+        return gson.fromJson(sharedPreferences.getString("current_user", ""), User.class);
+    }
+
+    private void setCurrentUser(User user) {
+        sharedPreferences.edit()
+                .putString("current_user", gson.toJson(user))
+                .apply();
+    }
+
+    private String getCurrentDeviceToken() {
+        return sharedPreferences.getString("current_device_token", "");
+    }
+
+    private void setCurrentDeviceToken(String token) {
+        sharedPreferences.edit()
+                .putString("current_device_token", token)
+                .apply();
     }
 
     private Observable<List<User>> getUsersObservable() {
@@ -125,13 +147,11 @@ public class UserRepositoryImpl implements UserRepository {
         return new String(bytes);
     }
 
-    private User getCurrentUser() {
-        return gson.fromJson(sharedPreferences.getString("current_user", ""), User.class);
-    }
-
-    private void setCurrentUser(User user) {
-        sharedPreferences.edit()
-                .putString("current_user", gson.toJson(user))
-                .apply();
+    private User mapFromQiscusAccount(QiscusAccount qiscusAccount) {
+        User user = new User();
+        user.setId(qiscusAccount.getEmail());
+        user.setName(qiscusAccount.getUsername());
+        user.setAvatarUrl(qiscusAccount.getAvatar());
+        return user;
     }
 }

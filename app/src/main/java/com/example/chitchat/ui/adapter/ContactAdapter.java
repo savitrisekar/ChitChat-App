@@ -50,8 +50,11 @@ public class ContactAdapter extends SortedRecyclerViewAdapter<User, ContactAdapt
     public void addOrUpdate(List<User> contacts) {
         for (User contact : contacts) {
             int index = findPosition(contact);
-            if (index == -1) getData().add(contact);
-            else getData().updateItemAt(index, contact);
+            if (index == -1) {
+                getData().add(contact);
+            } else {
+                getData().updateItemAt(index, contact);
+            }
         }
         notifyDataSetChanged();
     }
@@ -73,11 +76,11 @@ public class ContactAdapter extends SortedRecyclerViewAdapter<User, ContactAdapt
             itemView.setOnClickListener(this);
         }
 
-        public void bind(User user) {
+        void bind(User user) {
             Nirmana.getInstance().get()
                     .setDefaultRequestOptions(new RequestOptions()
-                            .placeholder(R.drawable.ic_qiscus_avatar)
-                            .error(R.drawable.ic_qiscus_avatar)
+                            .placeholder(R.drawable.ic_person)
+                            .error(R.drawable.ic_person)
                             .dontAnimate())
                     .load(user.getAvatarUrl())
                     .into(avatar);

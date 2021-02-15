@@ -14,8 +14,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChitChatApp">
-        <activity android:name=".ui.CreateGroupActivity"></activity>
-        <activity android:name=".ui.GroupChatActivity" />
+        <activity android:name=".ui.GroupChatRoomActivity"
+            android:theme="@style/Theme.SecondApp"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.ChatRoomActivity"
+            android:theme="@style/Theme.SecondApp"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.groupcreate.GroupChatActivity"
+            android:theme="@style/Theme.SecondApp"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.ContactActivity"
             android:screenOrientation="portrait"

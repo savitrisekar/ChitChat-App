@@ -1,10 +1,16 @@
 package com.example.chitchat.ui.adapter;
 
 
+import android.view.View;
+
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 
+import java.util.List;
+
 public abstract class SortedRecyclerViewAdapter<Item, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+
+    private CommentsAdapter.RecyclerViewItemClickListener recyclerViewItemClickListener;
 
     private SortedList<Item> data = new SortedList<>(getItemClass(), new SortedList.Callback<Item>() {
         @Override
@@ -93,6 +99,74 @@ public abstract class SortedRecyclerViewAdapter<Item, VH extends RecyclerView.Vi
         }
 
         return -1;
+    }
+
+    public int add(Item item) {
+        int i = data.add(item);
+        notifyItemInserted(i);
+        return i;
+    }
+
+    public void add(final List<Item> items) {
+        data.addAll(items);
+        notifyDataSetChanged();
+    }
+
+    public void addOrUpdate(Item item) {
+        int i = findPosition(item);
+        if (i >= 0) {
+            data.updateItemAt(i, item);
+            notifyDataSetChanged();
+        } else {
+            add(item);
+        }
+    }
+
+    public void addOrUpdate(final List<Item> items) {
+        for (Item item : items) {
+            int i = findPosition(item);
+            if (i >= 0) {
+                data.updateItemAt(i, item);
+            } else {
+                data.add(item);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    public void remove(int position) {
+        if (position >= 0 && position < data.size()) {
+            data.removeItemAt(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    public void remove(Item item) {
+        int position = findPosition(item);
+        remove(position);
+    }
+
+    //Set method of OnItemClickListener object
+    public void setOnItemClickListener(CommentsAdapter.RecyclerViewItemClickListener recyclerViewItemClickListener) {
+        this.recyclerViewItemClickListener = recyclerViewItemClickListener;
+    }
+
+    public void setOnClickListener(View view, int position) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //When item view is clicked, trigger the itemclicklistener
+                recyclerViewItemClickListener.onItemClick(v, position);
+            }
+        });
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //When item view is clicked long, trigger the itemclicklistener
+                recyclerViewItemClickListener.onItemLongClick(v, position);
+                return true;
+            }
+        });
     }
 
     public void clear() {

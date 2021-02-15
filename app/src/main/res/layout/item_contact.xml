@@ -21,10 +21,30 @@
             android:id="@+id/tv_contact_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/font_16"
+            android:textSize="@dimen/font_14"
             android:layout_marginStart="@dimen/dimen_8"
             android:text="@string/display_name"
-            android:layout_gravity="center_vertical"/>
+            android:layout_weight="4"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black_semi"/>
+
+        <ImageView
+            android:id="@+id/iv_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/dimen_8"
+            android:src="@drawable/ic_check_circle"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_cancel_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@drawable/ic_cancel_circle"
+            android:visibility="gone" />
 
     </LinearLayout>
 

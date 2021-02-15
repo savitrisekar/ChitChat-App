@@ -8,9 +8,13 @@ import com.example.chitchat.utils.Action;
 import java.util.List;
 
 public interface UserRepository {
-    void login(String userId, String password, String displayName, Action<User> onSuccess, Action<Throwable> onError);
-    void getUser(Action<List<User>> onSuccess, Action<Throwable> onError);
-    void openChat(User user, Action<Intent> onSuccess, Action<Throwable> onError);
-    void updateContacts(List<User> contacts);
+    void login(String email, String password, String name, Action<User> onSuccess, Action<Throwable> onError);
+
+    void getCurrentUser(Action<User> onSuccess, Action<Throwable> onError);
+
+    void getUsers(long page, int limit, String query, Action<List<User>> onSuccess, Action<Throwable> onError);
+
+    void updateProfile(String name, Action<User> onSuccess, Action<Throwable> onError);
+
     void logout();
 }

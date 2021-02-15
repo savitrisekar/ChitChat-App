@@ -18,9 +18,9 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void openChat(QiscusChatRoom chatRoom) {
-        if (chatRoom.isGroup()){
+        if (chatRoom.isGroup()) {
             view.showChatRoomPageGroup(chatRoom);
-        return;
+            return;
         }
         view.showChatRoomPage(chatRoom);
     }

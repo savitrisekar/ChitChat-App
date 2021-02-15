@@ -13,13 +13,11 @@ public class ContactContract {
 
         void showChatRoomPage(QiscusChatRoom chatRoom);
 
-        void showRoomPage(Intent intent);
-
         void showErrorMessage(String errorMessage);
     }
 
     interface Presenter {
-        void loadContacts();
+        void loadContacts(long page, int limit, String query);
 
         void createRoom(User contact);
     }

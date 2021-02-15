@@ -49,4 +49,57 @@
         android:layout_height="match_parent"
         android:layout_below="@id/appBar"/>
 
+    <LinearLayout
+        android:id="@+id/ll_empty_room"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_welcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="Oops!!"
+            android:textColor="#666666"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/tv_describes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="40dp"
+            android:gravity="center"
+            android:text="You don’t have any conversation."
+            android:textSize="@dimen/font_16" />
+
+        <TextView
+            android:id="@+id/tv_describe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:gravity="center"
+            android:text="Lets send a message to your contact"
+            android:textSize="@dimen/font_16" />
+
+        <Button
+            android:id="@+id/btn_start_chat"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="@dimen/dimen_34"
+            android:text="Start Chat"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_16"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/green"/>
+
+    </LinearLayout>
+
 </RelativeLayout>

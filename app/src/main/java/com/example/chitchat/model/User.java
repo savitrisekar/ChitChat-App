@@ -108,3 +108,4 @@ public class User implements Parcelable, Comparable<User> {
         return name.compareTo(o.name);
     }
 }
+

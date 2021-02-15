@@ -35,7 +35,6 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
                 .subscribe(onSuccess::call, onError::call);
     }
 
-
     @Override
     public void createChatRoom(User user, Action<QiscusChatRoom> onSuccess, Action<Throwable> onError) {
         QiscusChatRoom savedChatRoom = QiscusCore.getDataStore().getChatRoom(user.getId());
@@ -45,7 +44,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
         }
 
         QiscusApi.getInstance()
-                .getChatRoom(user.getId(), null, null)
+                .chatUser(user.getId(), null)
                 .doOnNext(chatRoom -> QiscusCore.getDataStore().addOrUpdate(chatRoom))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -64,5 +63,10 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(onSuccess::call, onError::call);
+    }
+
+    @Override
+    public void addParticipant(long roomId, List<User> members, Action<Void> onSuccess, Action<Throwable> onError) {
+
     }
 }
