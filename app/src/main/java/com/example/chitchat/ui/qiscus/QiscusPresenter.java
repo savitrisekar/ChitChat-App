@@ -1,4 +1,4 @@
-package com.example.chitchat.ui;
+package com.example.chitchat.ui.qiscus;
 
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;

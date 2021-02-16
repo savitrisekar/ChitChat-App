@@ -16,6 +16,7 @@ import com.example.chitchat.R;
 import com.example.chitchat.ui.adapter.ContactAdapter;
 import com.example.chitchat.ui.adapter.OnItemClickListener;
 import com.example.chitchat.model.User;
+import com.example.chitchat.ui.chatroom.ChatRoomActivity;
 import com.example.chitchat.ui.groupcreate.GroupChatActivity;
 import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
 

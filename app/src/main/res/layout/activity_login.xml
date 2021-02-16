@@ -19,7 +19,7 @@
             android:id="@+id/iv_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/logo"
+            android:src="@drawable/ic_qiscus_logo"
             android:layout_marginTop="@dimen/dimen_40"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"

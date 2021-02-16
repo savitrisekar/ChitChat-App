@@ -1,4 +1,4 @@
-package com.example.chitchat.ui;
+package com.example.chitchat.ui.qiscus;
 
 import android.annotation.TargetApi;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.example.chitchat.ui;
+package com.example.chitchat.ui.qiscus;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,6 +29,7 @@ import com.example.chitchat.R;
 import com.example.chitchat.ui.adapter.OnItemClickListener;
 import com.example.chitchat.ui.adapter.QiscusPhotoAdapter;
 import com.example.chitchat.ui.adapter.QiscusPhotoPagerAdapter;
+import com.example.chitchat.ui.fragment.QiscusPhotoFragment;
 import com.qiscus.jupuk.JupukConst;
 import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
 import com.qiscus.sdk.chat.core.data.model.QiscusPhoto;

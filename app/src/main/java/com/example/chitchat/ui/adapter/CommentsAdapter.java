@@ -8,7 +8,6 @@ import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.chitchat.R;
 import com.example.chitchat.utils.DateUtil;
 import com.qiscus.sdk.chat.core.QiscusCore;
@@ -16,7 +15,6 @@ import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
 import com.qiscus.sdk.chat.core.data.model.QiscusComment;
 import com.qiscus.sdk.chat.core.util.QiscusAndroidUtil;
 import com.qiscus.sdk.chat.core.util.QiscusDateUtil;
-
 import java.util.List;
 
 public class CommentsAdapter extends SortedRecyclerViewAdapter<QiscusComment, CommentsAdapter.Holder> {

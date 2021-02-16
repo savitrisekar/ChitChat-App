@@ -21,6 +21,8 @@ import com.example.chitchat.ChitChatApp;
 import com.example.chitchat.R;
 import com.example.chitchat.ui.adapter.ChatRoomAdapter;
 import com.example.chitchat.ui.adapter.OnItemClickListener;
+import com.example.chitchat.ui.chatroom.ChatRoomActivity;
+import com.example.chitchat.ui.chatroom.GroupChatRoomActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
 import com.qiscus.sdk.chat.core.event.QiscusCommentReceivedEvent;

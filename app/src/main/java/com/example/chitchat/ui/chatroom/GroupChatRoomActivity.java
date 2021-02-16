@@ -1,4 +1,4 @@
-package com.example.chitchat.ui;
+package com.example.chitchat.ui.chatroom;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,14 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.RequestOptions;
 import com.example.chitchat.R;
+import com.example.chitchat.ui.fragment.ChatRoomFragment;
 import com.qiscus.nirmana.Nirmana;
 import com.qiscus.sdk.chat.core.QiscusCore;
 import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;

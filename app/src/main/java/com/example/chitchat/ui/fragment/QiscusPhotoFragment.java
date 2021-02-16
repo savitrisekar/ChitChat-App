@@ -1,4 +1,4 @@
-package com.example.chitchat.ui;
+package com.example.chitchat.ui.fragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.chitchat.R;
+import com.example.chitchat.ui.qiscus.QiscusTouchImageView;
 import com.example.chitchat.utils.QiscusImageUtil;
 import com.qiscus.nirmana.Nirmana;
 import com.trello.rxlifecycle.components.support.RxFragment;

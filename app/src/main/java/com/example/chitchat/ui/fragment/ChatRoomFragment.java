@@ -1,12 +1,9 @@
-package com.example.chitchat.ui;
+package com.example.chitchat.ui.fragment;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -22,18 +19,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chitchat.R;
+import com.example.chitchat.ui.qiscus.QiscusChatPresenter;
+import com.example.chitchat.ui.qiscus.QiscusSendPhotoConfirmationActivity;
 import com.example.chitchat.ui.adapter.CommentsAdapter;
 import com.example.chitchat.ui.adapter.QiscusChatScrollListener;
-import com.example.chitchat.utils.QiscusImageUtil;
 import com.example.chitchat.utils.QiscusPermissionsUtil;
-import com.qiscus.jupuk.JupukConst;
-import com.qiscus.sdk.chat.core.QiscusCore;
 import com.qiscus.sdk.chat.core.data.local.QiscusCacheManager;
 import com.qiscus.sdk.chat.core.data.model.QiscusChatRoom;
 import com.qiscus.sdk.chat.core.data.model.QiscusComment;
@@ -42,7 +37,6 @@ import com.qiscus.sdk.chat.core.data.remote.QiscusPusherApi;
 import com.qiscus.sdk.chat.core.util.QiscusFileUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,13 +45,7 @@ public class ChatRoomFragment extends Fragment implements QiscusChatPresenter.Vi
         QiscusPermissionsUtil.PermissionCallbacks, QiscusChatScrollListener.Listener {
 
     private static final String CHAT_ROOM_KEY = "extra_chat_room";
-    protected static final int RC_PERMISSIONS = 127;
-    protected static final int RC_CAMERA_PERMISSION = 128;
-    protected static final int RC_AUDIO_PERMISSION = 129;
-    protected static final int RC_FILE_PERMISSION = 130;
-    protected static final int TAKE_PICTURE_REQUEST = 3;
     protected static final int SEND_PICTURE_CONFIRMATION_REQUEST = 4;
-    protected static final int SHOW_MEDIA_DETAIL = 5;
     private static final int REQUEST_PICK_IMAGE = 1;
     private static final int REQUEST_FILE_PERMISSION = 2;
 
@@ -77,12 +65,13 @@ public class ChatRoomFragment extends Fragment implements QiscusChatPresenter.Vi
     private ImageView ivSendButton, ivAttach;
     private ProgressBar progressBar;
     private RecyclerView rvChat;
-    private LinearLayout llEmptyChat, llAttach, llGallery, llCancel;
+    private LinearLayout llEmptyChat, llAttach, llGallery, llCancel, rootViewSender;
     private QiscusChatRoom chatRoom;
     private CommentsAdapter commentsAdapter;
     private QiscusChatPresenter chatPresenter;
     private UserTypingListener userTypingListener;
     private boolean typing;
+    private QiscusComment selectedComment = null;
 
     public static ChatRoomFragment newInstance(QiscusChatRoom chatRoom) {
         ChatRoomFragment chatRoomFragment = new ChatRoomFragment();
@@ -112,6 +101,7 @@ public class ChatRoomFragment extends Fragment implements QiscusChatPresenter.Vi
         llGallery = viewChat.findViewById(R.id.ll_gallery);
         llCancel = viewChat.findViewById(R.id.ll_cancel);
         llAttach = viewChat.findViewById(R.id.ll_Attachment);
+        rootViewSender = viewChat.findViewById(R.id.rootViewSender);
     }
 
     @Override
@@ -143,7 +133,17 @@ public class ChatRoomFragment extends Fragment implements QiscusChatPresenter.Vi
 
         ivSendButton.setOnClickListener(v -> {
             if (!TextUtils.isEmpty(edtMessageField.getText())) {
-                chatPresenter.sendComment(edtMessageField.getText().toString());
+                if (rootViewSender.getVisibility() == View.VISIBLE) {
+                    if (selectedComment != null) {
+                        chatPresenter.sendReplyComment(edtMessageField.getText().toString(), selectedComment);
+                    }
+
+                    rootViewSender.setVisibility(View.GONE);
+                    selectedComment = null;
+                } else {
+                    chatPresenter.sendComment(edtMessageField.getText().toString());
+                }
+
                 edtMessageField.setText("");
             }
         });
@@ -209,10 +209,7 @@ public class ChatRoomFragment extends Fragment implements QiscusChatPresenter.Vi
     public void onAttach(Context context) {
         super.onAttach(context);
 
-//        if (getActivity() instanceof CommentSelectedListener) {
-//            commentSelectedListener = (CommentSelectedListener) getActivity();
         userTypingListener = (UserTypingListener) getActivity();
-//        }
     }
 
     @Override
@@ -424,20 +421,6 @@ public class ChatRoomFragment extends Fragment implements QiscusChatPresenter.Vi
         }
     }
 
-    protected void requestCameraPermission() {
-        if (!QiscusPermissionsUtil.hasPermissions(getActivity(), CAMERA_PERMISSION)) {
-            QiscusPermissionsUtil.requestPermissions(this, getString(R.string.qiscus_permission_request_title),
-                    RC_CAMERA_PERMISSION, CAMERA_PERMISSION);
-        }
-    }
-
-    protected void requestAddFilePermission() {
-        if (!QiscusPermissionsUtil.hasPermissions(getActivity(), FILE_PERMISSION)) {
-            QiscusPermissionsUtil.requestPermissions(this, getString(R.string.qiscus_permission_request_title),
-                    RC_FILE_PERMISSION, FILE_PERMISSION);
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -494,12 +477,6 @@ public class ChatRoomFragment extends Fragment implements QiscusChatPresenter.Vi
         super.onDestroyView();
         notifyLatestRead();
         chatPresenter.detachView();
-    }
-
-    public interface CommentSelectedListener {
-        void onCommentSelected(QiscusComment selectedComment);
-
-        void onClearSelectedComment(Boolean status);
     }
 
     public interface UserTypingListener {

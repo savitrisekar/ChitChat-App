@@ -31,7 +31,7 @@
     <string name="display_choose_image">Choose image</string>
     <string name="display_grant">Grant Permission</string>
     <string name="display_denied">Denied Permission</string>
-    <string name="display_read_img">Failed read image</string>
+    <string name="display_read_img">Failed read image data</string>
     <string name="display_file_open">Failed open file</string>
     <string name="display_img_open">Failed open image</string>
     <string name="display_participant">Participants</string>
